@@ -1,0 +1,128 @@
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset="utf-8">
+<title>Akıllı Öğrenci Not Sistemi Proje Dökümanı</title>
+<style>
+  body { font-family: 'Calibri', sans-serif; font-size: 11pt; line-height: 1.5; }
+  h1 { color: #2E74B5; font-size: 20pt; }
+  h2 { color: #2E74B5; font-size: 16pt; margin-top: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+  h3 { color: #1F4D78; font-size: 13pt; margin-top: 15px;}
+  ul { margin-top: 5px; }
+  li { margin-bottom: 5px; }
+  code { background-color: #f4f4f4; padding: 2px 4px; border-radius: 4px; font-family: Consolas, monospace; }
+  pre { background-color: #f4f4f4; padding: 10px; border-radius: 4px; font-family: Consolas, monospace; }
+  table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+  th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+  th { background-color: #f2f2f2; color: #333; }
+</style>
+</head>
+<body>
+
+<h1>Akıllı Öğrenci Not Sistemi</h1>
+<p>Bu proje, öğrencilerin ders kayıtlarını, notlarını ve başarı durumlarını takip etmek amacıyla geliştirilmiş kapsamlı bir Okul Yönetim Sistemi API'sidir. Gelişmiş özellikleri ve tasarım desenleriyle (Observer, Builder) desteklenen modern bir arka uç uygulamasıdır.</p>
+
+<h2>Projenin Amacı</h2>
+<p>Öğrenci bilgilerini güvenli bir şekilde saklamak, ders kayıt işlemlerini yönetmek ve öğrencilerin not girişlerini gerçekleştirip detaylı analizler sunmaktır. Sistem, ders bazında kredi ağırlıklı ortalama, harf notu hesaplaması ve risk analizi gibi "Akıllı Rapor" özelliklerine sahiptir.</p>
+
+<h2>Özellikler</h2>
+<ul>
+<li><b>Öğrenci ve Ders Yönetimi:</b> Öğrenci ve ders tanımlamaları, API üzerinden dinamik olarak yapılabilir.</li>
+<li><b>Kayıt Sistemi:</b> Öğrenciler sisteme eklenen derslere kayıt olabilir.</li>
+<li><b>Not İşlemleri ve Bildirim (Observer Pattern):</b> Öğrenciye bir not eklendiğinde sistem bunu otomatik olarak algılar ve "Not Bildirim Logu" (Observer) mekanizması ile veritabanına ve konsola kaydeder.</li>
+<li><b>Akıllı Raporlama:</b> Öğrencinin aldığı notlara göre kredi ağırlıklı genel not ortalaması (GNO) hesaplanır. Notu girilmeyen dersler listelenir. Harf notu (AA, BA vb.) dönüştürme işlemi yapılır.</li>
+<li><b>Kullanıcı Arayüzü:</b> <code>src/main/resources/static</code> klasörü altında temel bir web arayüzü sunar.</li>
+<li><b>Konteynerizasyon:</b> Uygulama ve veritabanı Docker Compose ile tamamen izole bir şekilde tek komutla ayağa kaldırılabilir.</li>
+<li><b>Sürekli Entegrasyon:</b> GitLab CI/CD desteği ile test ve derleme süreçleri otomatize edilmiştir.</li>
+</ul>
+
+<h2>Kurulum ve Çalıştırma</h2>
+<h3>Docker ile Çalıştırma (Önerilen)</h3>
+<p>Projenin kök dizininde aşağıdaki komutu çalıştırarak hem uygulamayı hem de PostgreSQL veritabanını başlatabilirsiniz:</p>
+<pre>docker compose up --build</pre>
+<p>Uygulama başarıyla başladıktan sonra erişilebilecek bağlantılar:</p>
+<ul>
+<li><b>Web Paneli:</b> <a href="http://localhost:8080/">http://localhost:8080/</a></li>
+<li><b>REST API Temel Dizini:</b> <a href="http://localhost:8080/api/">http://localhost:8080/api/</a></li>
+<li><b>Swagger API Dokümantasyonu:</b> <a href="http://localhost:8080/swagger-ui/index.html">http://localhost:8080/swagger-ui/index.html</a></li>
+<li><b>Sağlık Kontrolü (Health Check):</b> <a href="http://localhost:8080/health">http://localhost:8080/health</a></li>
+</ul>
+
+<h3>Yerel Ortamda Geliştirme ve Çalıştırma</h3>
+<p>Sadece PostgreSQL veritabanını Docker üzerinde çalıştırıp, uygulamayı yerel IDE'niz veya Maven üzerinden başlatabilirsiniz:</p>
+<pre>
+# Sadece veritabanını başlat
+docker compose up -d postgres
+
+# Uygulamayı çalıştır
+mvn spring-boot:run
+</pre>
+
+<h2>REST API Akışı Örneği</h2>
+<ol>
+<li><code>POST /api/courses</code>: Yeni bir ders ve kredi değerini sisteme ekleyin.</li>
+<li><code>POST /api/students</code>: Yeni bir öğrenci profili oluşturun.</li>
+<li><code>POST /api/enrollments</code>: Öğrenciyi, not girişi yapılabilmesi için ilgili derse kaydedin.</li>
+<li><code>POST /api/grades</code>: Kayıtlı öğrenciye not girişi yapın.</li>
+<li><code>GET /api/analysis/{ogrenciNo}</code>: Öğrencinin başarı durumunu, ortalamasını ve detaylı raporunu görüntüleyin.</li>
+</ol>
+
+<h2>Temel API Endpoint'leri</h2>
+<table>
+  <tr>
+    <th>HTTP Metodu</th>
+    <th>İstek Yolu</th>
+    <th>Açıklama</th>
+  </tr>
+  <tr><td>GET</td><td>/api/students</td><td>Tüm öğrencileri listeler.</td></tr>
+  <tr><td>GET</td><td>/api/students/{no}</td><td>Belirli bir öğrencinin detaylarını getirir.</td></tr>
+  <tr><td>POST</td><td>/api/students</td><td>Yeni öğrenci ekler (Builder Design Pattern kullanılmıştır).</td></tr>
+  <tr><td>GET</td><td>/api/courses</td><td>Tüm dersleri listeler.</td></tr>
+  <tr><td>POST</td><td>/api/courses</td><td>Yeni ders tanımlar.</td></tr>
+  <tr><td>POST</td><td>/api/enrollments</td><td>Öğrenciyi bir derse kaydeder.</td></tr>
+  <tr><td>GET</td><td>/api/students/{no}/enrollments</td><td>Öğrencinin kayıtlı olduğu dersleri getirir.</td></tr>
+  <tr><td>POST</td><td>/api/grades</td><td>Not ekler ve Observer mekanizmasını tetikler.</td></tr>
+  <tr><td>GET</td><td>/api/analysis/{no}</td><td>Öğrencinin detaylı başarı raporunu (Akıllı Özet) sunar.</td></tr>
+</table>
+
+<br><br>
+<hr>
+
+<h1>Projede Kullanılan Teknolojiler ve Mimari</h1>
+<p>Bu proje, modern ve ölçeklenebilir bir arka uç sistemi (backend) inşa etmek amacıyla güncel Java ve Spring ekosistemi kullanılarak geliştirilmiştir. Aşağıda projede kullanılan temel teknolojiler, kütüphaneler ve mimari yaklaşımlar açıklanmıştır.</p>
+
+<h2>Temel Teknolojiler</h2>
+<ul>
+<li><b>Java 17:</b> Projenin temel programlama dilidir. Güncel dil özellikleri, performans iyileştirmeleri ve uzun süreli destek (LTS) sürümü olması nedeniyle tercih edilmiştir.</li>
+<li><b>Spring Boot 3.3.4:</b> Uygulamanın hızlı bir şekilde yapılandırılması, bağımlılıkların yönetilmesi ve gömülü bir web sunucusu (Tomcat) ile kolayca çalıştırılabilmesi için kullanılmıştır. Projenin ana çatısını oluşturur.</li>
+<li><b>Maven:</b> Proje bağımlılıklarının yönetimi (<code>pom.xml</code>) ve derleme süreçleri (build) için kullanılan yapılandırma ve yönetim aracıdır.</li>
+</ul>
+
+<h2>Veri Erişimi ve Veritabanı</h2>
+<ul>
+<li><b>PostgreSQL:</b> Uygulamanın birincil ve tek veri deposudur. Öğrenciler, dersler, notlar ve log kayıtları gibi tüm ilişkisel veriler bu güçlü ve açık kaynaklı ilişkisel veritabanı yönetim sisteminde (RDBMS) tutulmaktadır.</li>
+<li><b>Spring Data JPA:</b> Veritabanı işlemlerinin (CRUD) nesne yönelimli bir şekilde (ORM - Object Relational Mapping) yapılmasını sağlar. Geliştiriciyi karmaşık SQL sorguları yazmaktan kurtarır ve veritabanı tablolarını Java sınıflarına (Entity) bağlar.</li>
+<li><b>Hibernate:</b> Spring Data JPA'nın arka planda kullandığı varsayılan ORM sağlayıcısıdır.</li>
+</ul>
+
+<h2>API ve Dokümantasyon</h2>
+<ul>
+<li><b>Spring Web (RESTful API):</b> İstemci uygulamaların (web arayüzü, mobil uygulama vb.) sunucu ile iletişim kurabilmesi için RESTful mimarisine uygun web servisleri (Controller) oluşturmak için kullanılmıştır.</li>
+<li><b>Springdoc OpenAPI (Swagger) 2.6.0:</b> Geliştirilen REST API'lerin otomatik olarak dokümante edilmesi, test edilmesi ve arayüz üzerinden incelenebilmesi için projeye entegre edilmiştir.</li>
+<li><b>Spring Boot Validation:</b> API isteklerindeki verilerin (DTO'lar) kurallara (ör. boş olamaz, formatı e-posta olmalı) uygunluğunu kontrol etmek için kullanılır.</li>
+</ul>
+
+<h2>Altyapı ve Dağıtım (DevOps)</h2>
+<ul>
+<li><b>Docker:</b> Uygulamanın ve veritabanının, çalıştığı işletim sisteminden bağımsız olarak her ortamda aynı şekilde çalışmasını sağlamak için konteyner mimarisi kullanılmıştır.</li>
+<li><b>Docker Compose:</b> Birden fazla Docker konteynerini aynı anda başlatmak ve aralarındaki ağ bağlantısını kurmak için kullanılmıştır.</li>
+<li><b>GitLab CI/CD:</b> Projede sürekli entegrasyon (Continuous Integration) süreçlerini yönetmek için <code>.gitlab-ci.yml</code> yapılandırması bulunmaktadır.</li>
+</ul>
+
+<h2>Tasarım Desenleri (Design Patterns)</h2>
+<ul>
+<li><b>Builder Pattern (Kurucu Desen):</b> Öğrenci nesneleri gibi oluşturulması karmaşık olabilecek nesnelerin daha okunaklı ve güvenli bir şekilde yaratılmasını sağlamak için kullanılmıştır (<code>POST /api/students</code>).</li>
+<li><b>Observer Pattern (Gözlemci Desen):</b> Sistemdeki bir olayın diğer bileşenleri otomatik olarak haberdar etmesi için kullanılmıştır. Not eklendiğinde, sistem bu değişikliği dinleyip konsola log yazar ve veritabanındaki not bildirim tablosuna (<code>grade_notifications</code>) kayıt atar.</li>
+</ul>
+
+</body>
+</html>

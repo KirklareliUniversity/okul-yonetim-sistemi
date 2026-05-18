@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Akilli Ogrenci Not Sistemi</title>
+  <link rel="stylesheet" href="/css/app.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
+  <script src="/js/app.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <h1>Akilli Ogrenci Not Sistemi</h1>
+  </header>
+
+  <main class="grid">
+    <section class="card">
+      <h2>Ogrenci</h2>
+      <form id="form-student" class="form">
+        <input name="studentNumber" placeholder="Ogrenci no" required />
+        <input name="firstName" placeholder="Ad" required />
+        <input name="lastName" placeholder="Soyad" required />
+        <input name="department" placeholder="Bolum" required />
+        <input name="email" type="email" placeholder="E-posta" required />
+        <button type="submit">Kaydet</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Ders</h2>
+      <form id="form-course" class="form">
+        <input name="courseCode" placeholder="Ders kodu (or. CSE101)" required />
+        <input name="name" placeholder="Ders adi" required />
+        <input name="credit" type="number" min="1" max="30" placeholder="Kredi" required />
+        <button type="submit">Tanimla</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Derse kayit</h2>
+      <form id="form-enroll" class="form">
+        <input name="studentNumber" placeholder="Ogrenci no" required />
+        <input name="courseCode" placeholder="Ders kodu" required />
+        <button type="submit">Kaydol</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Not girisi</h2>
+      <form id="form-grade" class="form">
+        <input name="studentNumber" placeholder="Ogrenci no" required />
+        <input name="courseCode" placeholder="Ders kodu" required />
+        <input name="grade" type="number" step="0.01" min="0" max="100" placeholder="Not (0-100)" required />
+        <button type="submit">Kaydet</button>
+      </form>
+      <p class="hint">Not icin ogrenci derse kayitli olmalidir. </p>
+    </section>
+
+    <section class="card wide">
+      <h2>Akilli rapor</h2>
+      <div class="row">
+        <input id="analysis-student" placeholder="Ogrenci numarasi" />
+        <button type="button" id="btn-analysis">Raporu yukle</button>
+        <button type="button" id="btn-refresh-students" class="secondary">Ogrenci listesini yenile</button>
+      </div>
+      <div id="analysis-summary" class="summary"></div>
+      <div id="course-table-wrap" class="table-wrap"></div>
+      <canvas id="grade-chart" height="120"></canvas>
+      <pre id="analysis-raw" class="raw"></pre>
+    </section>
+
+    <section class="card wide">
+      <h2>Kayitli ogrenciler</h2>
+      <ul id="student-list" class="list"></ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span id="status" class="muted"></span>
+  </footer>
+</body>
+</html>
