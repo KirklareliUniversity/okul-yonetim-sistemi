@@ -139,4 +139,4 @@ Projede farklı paketlerde organize edilmiş bir Spring Boot dizin yapısı bulu
 - İleri seviye bir portföy projesi olarak özgeçmişe eklenebilir
 
 ## Hazırlayanlar
-- [İsminizi veya Ekip Üyelerinin İsimlerini Buraya Yazabilirsiniz]
+- Didem ZEREN, Emin SANCAKLI, Hilal YILDIZ
